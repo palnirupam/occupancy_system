@@ -87,50 +87,64 @@ This tool should NOT be used for:
 ### System Design
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     Main Process                             │
-│  ┌────────────────────────────────────────────────────────┐ │
-│  │  Configuration Loader (camera_config.json)             │ │
-│  └────────────────────────────────────────────────────────┘ │
-│                           │                                  │
-│                           ▼                                  │
-│  ┌────────────────────────────────────────────────────────┐ │
-│  │           Thread Manager (start_system)                │ │
-│  └────────────────────────────────────────────────────────┘ │
-│         │                  │                  │              │
-│         ▼                  ▼                  ▼              │
-│  ┌──────────┐      ┌──────────┐      ┌──────────┐          │
-│  │ Camera 1 │      │ Camera 2 │      │ Camera N │          │
-│  │  Thread  │      │  Thread  │      │  Thread  │          │
-│  └──────────┘      └──────────┘      └──────────┘          │
-│         │                  │                  │              │
-│         └──────────────────┴──────────────────┘              │
-│                           │                                  │
-│                           ▼                                  │
-│  ┌────────────────────────────────────────────────────────┐ │
-│  │         Image Processing Pipeline                      │ │
-│  │  • Frame Capture → Color Conversion → Resize →        │ │
-│  │    Timestamp Overlay → JPEG Compression → Save        │ │
-│  └────────────────────────────────────────────────────────┘ │
-│                           │                                  │
-│                           ▼                                  │
-│  ┌────────────────────────────────────────────────────────┐ │
-│  │              Logging System                            │ │
-│  │         CSV Logger  │  JSON Logger                     │ │
-│  └────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
+╔═══════════════════════════════════════════════════════════════════╗
+║                          MAIN PROCESS                             ║
+║                                                                   ║
+║   ┌───────────────────────────────────────────────────────────┐  ║
+║   │      Configuration Loader (camera_config.json)           │  ║
+║   └───────────────────────────────────────────────────────────┘  ║
+║                             │                                     ║
+║                             ▼                                     ║
+║   ┌───────────────────────────────────────────────────────────┐  ║
+║   │           Thread Manager (start_system)                   │  ║
+║   └───────────────────────────────────────────────────────────┘  ║
+║                             │                                     ║
+║            ┌────────────────┼────────────────┐                   ║
+║            ▼                ▼                ▼                   ║
+║     ┌────────────┐   ┌────────────┐   ┌────────────┐           ║
+║     │  Camera 1  │   │  Camera 2  │   │  Camera N  │           ║
+║     │   Thread   │   │   Thread   │   │   Thread   │           ║
+║     └────────────┘   └────────────┘   └────────────┘           ║
+║            │                │                │                   ║
+║            └────────────────┴────────────────┘                   ║
+║                             │                                     ║
+║                             ▼                                     ║
+║   ┌───────────────────────────────────────────────────────────┐  ║
+║   │           Image Processing Pipeline                       │  ║
+║   │                                                           │  ║
+║   │   Frame Capture → Color Conversion → Resize →            │  ║
+║   │   Timestamp Overlay → JPEG Compression → Save            │  ║
+║   └───────────────────────────────────────────────────────────┘  ║
+║                             │                                     ║
+║                             ▼                                     ║
+║   ┌───────────────────────────────────────────────────────────┐  ║
+║   │                  Logging System                           │  ║
+║   │                                                           │  ║
+║   │      CSV Logger           │         JSON Logger           │  ║
+║   │   (capture_log.csv)       │     (capture_log.json)        │  ║
+║   └───────────────────────────────────────────────────────────┘  ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
 ```
 
-### Component Overview
+### Component Details
 
-| Component | Responsibility | Thread-Safe |
-|-----------|---------------|-------------|
-| `load_camera_config()` | Parse JSON configuration | N/A |
-| `camera_worker()` | Capture loop for individual camera | Yes |
-| `save_image()` | Image processing and storage | Yes |
-| `log_capture()` | Write to CSV/JSON logs | Yes |
-| `write_json_log()` | JSON log management | Yes |
-| `start_system()` | Thread orchestration | Yes |
+| Component | Function | Thread-Safe |
+|-----------|----------|-------------|
+| `load_camera_config()` | Loads and parses camera configuration from JSON | N/A |
+| `camera_worker()` | Main capture loop for individual camera | ✓ Yes |
+| `save_image()` | Processes and saves frames with overlay | ✓ Yes |
+| `log_capture()` | Writes capture events to CSV and JSON | ✓ Yes |
+| `write_json_log()` | Manages JSON log file operations | ✓ Yes |
+| `start_system()` | Orchestrates all camera threads | ✓ Yes |
+
+### Data Flow
+
+1. **Initialization**: Load configuration → Create directories → Initialize CSV log
+2. **Thread Creation**: Spawn daemon thread for each camera
+3. **Capture Loop**: Read frame → Process → Save → Log → Wait interval
+4. **Error Handling**: Detect failure → Log error → Attempt reconnection
+5. **Shutdown**: Ctrl+C → Graceful thread termination
 
 ## Prerequisites
 
