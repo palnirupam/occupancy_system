@@ -754,7 +754,7 @@ draw.text((10, 450), f"{camera_id} {timestamp}", fill=(255, 0, 0))  # Bottom lef
 
 ## Contributing
 
-Contributions are welcome! Please follow these steps:
+Contributions are welcome! To contribute:
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature-name`)
@@ -764,41 +764,17 @@ Contributions are welcome! Please follow these steps:
 
 ## License
 
-MIT License
-
-Copyright (c) 2026 Nirupam Pal
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Author
 
-**Nirupam Pal**
-- GitHub: [@palnirupam](https://github.com/palnirupam)
-- Repository: [occupancy_system](https://github.com/palnirupam/occupancy_system)
+**Nirupam Pal**  
+GitHub: [@palnirupam](https://github.com/palnirupam)
 
 ## Support
 
-For issues or questions:
-- Open an issue on [GitHub Issues](https://github.com/palnirupam/occupancy_system/issues)
-- Check the [Troubleshooting](#troubleshooting) section
-- Review existing issues before creating new ones
+For issues or questions, open an issue on [GitHub Issues](https://github.com/palnirupam/occupancy_system/issues).
 
 ---
 
-**Built for occupancy monitoring and surveillance applications**
+Made with ❤️ by [Nirupam Pal](https://github.com/palnirupam)
